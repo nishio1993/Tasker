@@ -1,0 +1,15 @@
+DROP TABLE `SESSION`;
+
+CREATE TABLE `SESSION`
+(
+    `USER_ID`           VARCHAR(16)     NOT NULL    COMMENT 'ユーザーID',
+    `TOKEN`             CHAR(32)        NOT NULL    COMMENT '認証トークン',
+    `START_DATETIME`    DATETIME        NOT NULL    COMMENT '認証開始日時',
+    `END_DATETIME`      DATETIME        NOT NULL    COMMENT '認証期限日時'
+);
+
+ALTER TABLE `SESSION` ADD CONSTRAINT PK_SESSION PRIMARY KEY (
+    `USER_ID`
+);
+
+ALTER TABLE `SESSION` COMMENT 'セッション管理テーブル';
