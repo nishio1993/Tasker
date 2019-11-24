@@ -1,4 +1,4 @@
 <?php
 interface ColumnBase {
-    public static function isCollectValue($value) : bool;
+    public static function isCorrectValue($value) : bool;
 }

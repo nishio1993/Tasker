@@ -5,43 +5,57 @@ require_once('class/column/START_DATETIME.class.php');
 
 class START_DATETIMEtest extends TestCase {
     /**
-     * Y/m/d→Y-m-d
+     * Y-m-dOK
      *
      * @test
      */
-    public function Set_Convert1() {
-        $START_DATETIME = new START_DATETIME('2020/01/01 00:00:00');
-        $this->assertSame($START_DATETIME->Get(), '2020-01-01 00:00:00');
+    public function haifunOK() {
+        $this->assertTrue(START_DATETIME::isCorrectValue('2020-01-01 00:00:00'));
     }
-
+    
     /**
-     * Ymd→Y-m-d
+     * Y/m/dOK
      *
      * @test
      */
-    public function Set_Convert2() {
-        $START_DATETIME = new START_DATETIME('20200101000000');
-        $this->assertSame($START_DATETIME->Get(), '2020-01-01 00:00:00');
+    public function slashOK() {
+        $this->assertTrue(START_DATETIME::isCorrectValue('2020/01/01 00:00:00'));
     }
-
+    
     /**
-     * Y年m月d日→Y-m-d
+     * YmdOK
      *
      * @test
      */
-    public function Set_Convert3() {
-        $START_DATETIME = new START_DATETIME('2020年01月01日 00:00:00');
-        $this->assertSame($START_DATETIME->Get(), '2020-01-01 00:00:00');
+    public function noneOK() {
+        $this->assertTrue(START_DATETIME::isCorrectValue('20200101000000'));
     }
-
+    
     /**
-     * y-m-d→Y-m-d
+     * 年月日時分秒OK
      *
      * @test
      */
-    public function Set_Convert4() {
-        $this->expectException(RuntimeException::class);
-        $START_DATETIME = new START_DATETIME('20-01-01 00:00:00');
+    public function japaneseOK() {
+        $this->assertTrue(START_DATETIME::isCorrectValue('2020年01月01日00時00分00秒'));
+    }
+    
+    /**
+     * YmdOnlyNG
+     *
+     * @test
+     */
+    public function YmdNG() {
+        $this->assertFalse(START_DATETIME::isCorrectValue('2020-01-01'));
+    }
+    
+    /**
+     * HisOnlyNG
+     *
+     * @test
+     */
+    public function HisNG() {
+        $this->assertFalse(START_DATETIME::isCorrectValue('12:34:56'));
     }
 
     /**
@@ -49,8 +63,7 @@ class START_DATETIMEtest extends TestCase {
      *
      * @test
      */
-    public function Set_String() {
-        $this->expectException(RuntimeException::class);
-        $START_DATETIME = new START_DATETIME('二千二十年一月一日');
+    public function stringNG() {
+        $this->assertFalse(START_DATETIME::isCorrectValue('yyyymmddhhiiss'));
     }
 }

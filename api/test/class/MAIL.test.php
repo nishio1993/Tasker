@@ -9,15 +9,8 @@ class MAILtest extends TestCase {
      *
      * @test
      */
-    public function Set_HalfChar() {
-        try {
-            $MAIL = new MAIL('test@test.com');
-            $MAIL->Set('test@test.com');
-        } catch(Exception $e) {
-            $this->assertTrue(false);
-            return;
-        }
-        $this->assertTrue(true);
+    public function HalfCharOK() {
+        $this->assertTrue(MAIL::isCorrectValue('test@test.com'));
     }
 
     /**
@@ -25,15 +18,8 @@ class MAILtest extends TestCase {
      *
      * @test
      */
-    public function Set_FullChar() {
-        try {
-            $MAIL = new MAIL('TEST@TEST.COM');
-            $MAIL->Set('TEST@TEST.COM');
-        } catch(Exception $e) {
-            $this->assertTrue(false);
-            return;
-        }
-        $this->assertTrue(true);
+    public function FullCharOK() {
+        $this->assertTrue(MAIL::isCorrectValue('TEST@TEST.COM'));
     }
 
     /**
@@ -41,9 +27,8 @@ class MAILtest extends TestCase {
      *
      * @test
      */
-    public function SetEmpty() {
-        $this->expectException(RuntimeException::class);
-        $NAME = new MAIL('');
+    public function EmptyNG() {
+        $this->assertFalse(MAIL::isCorrectValue(''));
     }
 
     /**
@@ -51,9 +36,8 @@ class MAILtest extends TestCase {
      *
      * @test
      */
-    public function SetNull() {
-        $this->expectException(RuntimeException::class);
-        $NAME = new MAIL(null);
+    public function NullNG() {
+        $this->assertFalse(MAIL::isCorrectValue(null));
     }
 
     /**
@@ -61,15 +45,8 @@ class MAILtest extends TestCase {
      *
      * @test
      */
-    public function Set_NoAt() {
-        try {
-            $MAIL = new MAIL('TESTTEST.COM');
-            $MAIL->Set('TESTTEST.COM');
-        } catch(Exception $e) {
-            $this->assertTrue(true);
-            return;
-        }
-        $this->assertTrue(false);
+    public function NoAtNG() {
+        $this->assertFalse(MAIL::isCorrectValue('TESTTEST.COM'));
     }
 
     /**
@@ -77,15 +54,8 @@ class MAILtest extends TestCase {
      *
      * @test
      */
-    public function Set_MultiByte() {
-        try {
-            $MAIL = new MAIL('ｔｅｓｔ＠ｔｅｓｔ．ｃｏｍ');
-            $MAIL->Set('ｔｅｓｔ＠ｔｅｓｔ．ｃｏｍ');
-        } catch(Exception $e) {
-            $this->assertTrue(true);
-            return;
-        }
-        $this->assertTrue(false);
+    public function MultiByteNG() {
+        $this->assertFalse(MAIL::isCorrectValue('ｔｅｓｔ＠ｔｅｓｔ．ｃｏｍ'));
     }
 
     /**
@@ -93,15 +63,8 @@ class MAILtest extends TestCase {
      *
      * @test
      */
-    public function Set_OnePeriod() {
-        try {
-            $MAIL = new MAIL('te.st@test.com');
-            $MAIL->Set('te.st@test.com');
-        } catch(Exception $e) {
-            $this->assertTrue(false);
-            return;
-        }
-        $this->assertTrue(true);
+    public function OnePeriodOK() {
+        $this->assertTrue(MAIL::isCorrectValue('TE.ST@TEST.COM'));
     }
 
     /**
@@ -109,15 +72,8 @@ class MAILtest extends TestCase {
      *
      * @test
      */
-    public function Set_TwoPeriod() {
-        try {
-            $MAIL = new MAIL('te..st@test.com');
-            $MAIL->Set('te..st@test.com');
-        } catch(Exception $e) {
-            $this->assertTrue(true);
-            return;
-        }
-        $this->assertTrue(false);
+    public function TwoPeriodNG() {
+        $this->assertFalse(MAIL::isCorrectValue('TE..ST@TEST.COM'));
     }
 
     /**
@@ -125,15 +81,8 @@ class MAILtest extends TestCase {
      *
      * @test
      */
-    public function Set_FirstPeriod() {
-        try {
-            $MAIL = new MAIL('.test@test.com');
-            $MAIL->Set('.test@test.com');
-        } catch(Exception $e) {
-            $this->assertTrue(true);
-            return;
-        }
-        $this->assertTrue(false);
+    public function FirstPeriodNG() {
+        $this->assertFalse(MAIL::isCorrectValue('.test@test.com'));
     }
 
     /**
@@ -141,15 +90,8 @@ class MAILtest extends TestCase {
      *
      * @test
      */
-    public function Set_LastPeriod() {
-        try {
-            $MAIL = new MAIL('test.@test.com');
-            $MAIL->Set('test.@test.com');
-        } catch(Exception $e) {
-            $this->assertTrue(true);
-            return;
-        }
-        $this->assertTrue(false);
+    public function LastPeriodNG() {
+        $this->assertFalse(MAIL::isCorrectValue('test.@test.com'));
     }
 
     /**
@@ -157,15 +99,8 @@ class MAILtest extends TestCase {
      *
      * @test
      */
-    public function Set_CorrectSymbol() {
-        try {
-            $MAIL = new MAIL('-._@test.com');
-            $MAIL->Set('-._@test.com');
-        } catch(Exception $e) {
-            $this->assertTrue(false);
-            return;
-        }
-        $this->assertTrue(true);
+    public function CorrectSymbolOK() {
+        $this->assertTrue(MAIL::isCorrectValue('-._@test.com'));
     }
 
     /**
@@ -173,15 +108,8 @@ class MAILtest extends TestCase {
      *
      * @test
      */
-    public function Set_NotCorrectSymbol() {
-        try {
-            $MAIL = new MAIL('\\[,]"\'@test.com');
-            $MAIL->Set('\\[,]"\'@test.com');
-        } catch(Exception $e) {
-            $this->assertTrue(true);
-            return;
-        }
-        $this->assertTrue(false);
+    public function NotCorrectSymbolNG() {
+        $this->assertFalse(MAIL::isCorrectValue('\\[,]"\'@test.com'));
     }
     
     /**
@@ -189,9 +117,8 @@ class MAILtest extends TestCase {
      *
      * @test
      */
-    public function Set_Length256() {
-        $MAIL = new MAIL('1234567890abcdefghij123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890@123456789012345678901234567890123456789012345678901.com');
-        $this->assertSame(get_class($MAIL), 'MAIL');
+    public function Length256OK() {
+        $this->assertTrue(MAIL::isCorrectValue('1234567890abcdefghij123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890@123456789012345678901234567890123456789012345678901.com'));
     }
     
     /**
@@ -200,18 +127,7 @@ class MAILtest extends TestCase {
      * @test
      * @expectedException Exception
      */
-    public function Set_Length257() {
-        $this->expectException(Exception::class);
-        $MAIL = new MAIL('12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890@1234567890123456789012345678901234567890123456789012.com');
-    }
-
-    /**
-     * ゲット可能
-     *
-     * @test
-     */
-    public function Get_Correct() {
-        $MAIL = new MAIL('test@test.com');
-        $this->assertSame($MAIL->Get(), 'test@test.com');
+    public function Length257NG() {
+        $this->assertFalse(MAIL::isCorrectValue('12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890@1234567890123456789012345678901234567890123456789012.com'));
     }
 }

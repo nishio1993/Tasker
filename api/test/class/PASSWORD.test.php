@@ -2,16 +2,13 @@
 use PHPUnit\Framework\TestCase;
 require_once('vendor/autoload.php');
 require_once('class/column/PASSWORD.class.php');
-require_once('class/Security.class.php');
-
 class test extends TestCase {
     /**
      * @test
-     * @doesNotPerformAssertions
      */
-    public function SetHash() {
-        $hash = Security::ToHash('password');
-        $PASSWORD = new PASSWORD($hash);
+    public function HashOK() {
+        $hash = PASSWORD::toHash('password');
+        $this->assertTrue(PASSWORD::isCorrectValue($hash));
     }
 
     /**
@@ -19,9 +16,8 @@ class test extends TestCase {
      *
      * @test
      */
-    public function SetEmpty() {
-        $this->expectException(RuntimeException::class);
-        $NAME = new PASSWORD('');
+    public function EmptyNG() {
+        $this->assertFalse(PASSWORD::isCorrectValue(''));
     }
 
     /**
@@ -29,9 +25,8 @@ class test extends TestCase {
      *
      * @test
      */
-    public function SetNull() {
-        $this->expectException(RuntimeException::class);
-        $NAME = new PASSWORD(null);
+    public function NullNG() {
+        $this->assertFalse(PASSWORD::isCorrectValue(null));
     }
 
     /**
@@ -39,9 +34,8 @@ class test extends TestCase {
      *
      * @test
      */
-    public function GetAndVerify() {
-        $hash = Security::ToHash('password');
-        $PASSWORD = new PASSWORD($hash);
-        $this->assertTrue(Security::VerifyHash('password', $PASSWORD->Get()));
+    public function VerifyOK() {
+        $hash = PASSWORD::toHash('password');
+        $this->assertTrue(PASSWORD::verify('password', $hash));
     }
 }

@@ -5,13 +5,21 @@ require_once('class/column/NAME.class.php');
 
 class NAMEtest extends TestCase {
     /**
-     * SetGet
+     * 日本語OK
      *
      * @test
      */
-    public function SetGet() {
-        $NAME = new NAME('テスト太郎');
-        $this->assertSame('テスト太郎', $NAME->Get());
+    public function JapaneseOK() {
+        $this->assertTrue(NAME::isCorrectValue('テスト　太郎'));
+    }
+
+    /**
+     * 英名OK
+     *
+     * @test
+     */
+    public function EnglishOK() {
+        $this->assertTrue(NAME::isCorrectValue('Tarou Test'));
     }
 
     /**
@@ -19,50 +27,44 @@ class NAMEtest extends TestCase {
      *
      * @test
      */
-    public function SetEmpty() {
-        $this->expectException(RuntimeException::class);
-        $NAME = new NAME('');
+    public function EmptyNG() {
+        $this->assertFalse(NAME::isCorrectValue(''));
     }
-    
+
     /**
      * Nullセット不可能
      *
      * @test
      */
-    public function SetNull() {
-        $this->expectException(RuntimeException::class);
-        $NAME = new NAME(null);
-    }
-
-    /**
-     * @test
-     * @doesNotPerformAssertions
-     */
-    public function SetHalf32() {
-        $NAME = new NAME('12345678901234567890123456789012');
-    }
-
-    /**
-     * @test
-     * @doesNotPerformAssertions
-     */
-    public function SetFull32() {
-        $NAME = new NAME('１２３４５６７８９０１２３４５６７８９０１２３４５６７８９０１２');
+    public function NullNG() {
+        $this->assertFalse(NAME::isCorrectValue(null));
     }
 
     /**
      * @test
      */
-    public function SetHalf33() {
-        $this->expectException(RuntimeException::class);
-        $NAME = new NAME('123456789012345678901234567890123');
+    public function Half32OK() {
+        $this->assertTrue(NAME::isCorrectValue('12345678901234567890123456789012'));
     }
 
     /**
      * @test
      */
-    public function SetFull33() {
-        $this->expectException(RuntimeException::class);
-        $NAME = new NAME('１２３４５６７８９０１２３４５６７８９０１２３４５６７８９０１２３');
+    public function Full32OK() {
+        $this->assertTrue(NAME::isCorrectValue('１２３４５６７８９０１２３４５６７８９０１２３４５６７８９０１２'));
+    }
+
+    /**
+     * @test
+     */
+    public function Half33NG() {
+        $this->assertFalse(NAME::isCorrectValue('123456789012345678901234567890123'));
+    }
+
+    /**
+     * @test
+     */
+    public function Full33NG() {
+        $this->assertFalse(NAME::isCorrectValue('１２３４５６７８９０１２３４５６７８９０１２３４５６７８９０１２３'));
     }
 }
