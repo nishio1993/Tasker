@@ -1,11 +1,11 @@
 <?php
-require_once('./validation.class.php');
-require_once('./ColumnBase.class.php');
-class USER_ID extends ColumnBase {
+require_once('class/validation.class.php');
+require_once('class/column/ColumnBase.interface.php');
+class USER_ID implements ColumnBase {
     public static function isCollectValue($value) : bool {
         return  Validation::isSingleByte($value) &&
                 Validation::isCorrectLength($value, 8, 16) &&
-                !Validation::includingPlatformDependentCharacters($value)
+               !Validation::includingPlatformDependentCharacters($value)
                 ? true
                 : false;
     }

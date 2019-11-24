@@ -1,35 +1,37 @@
 <?php
-require_once('./interface/Logger.interface.php');
-class Logger implements LoggerInterface {
-    private static function Log(string $log, string $type) : void {
-        if (!file_exists("/log")) {
-            mkdir("/log");
+require_once('class/Security.class.php');
+class Logger {
+    private static function Log(string $log, string $type, string $user) : void {
+        $today     = date('Ymd');
+        $timestamp = Security::CreateTimeStamp('Y-m-d H:i:s.u');
+
+        if (!file_exists("../log")) {
+            mkdir("../log");
         }
-        if (!file_exists("/log/{$type}")) {
-            mkdir("/log/{$type}");
+        if (!file_exists("../log/{$type}")) {
+            mkdir("../log/{$type}");
         }
-
-        $now = date('Y/m/d');
-        $microtime = microtime();
-
-        $logfile = new SplFileObject("/log/{$type}/{$now}.log", 'a');
-        $logfile->fwrite("{$microtime} : {$log}");
-        $logfile = null;
+        if (!file_exists("../log/{$type}/{$today}.log")) {
+            touch("../log/{$type}/{$today}.log");
+        }
+        $logFile = new SplFileObject("../log/{$type}/{$today}.log", 'a');
+        $logFile->fwrite("{$timestamp} : {$user} : {$log}\n");
+        unset($logFile);
     }
 
-    public static function DEBUG(string $log) : void {
-        self::Log($log, 'debug');
+    public static function DEBUG(string $log, string $user = 'unknown') : void {
+        self::Log($log, 'debug', $user);
     }
 
-    public static function INFO(string $log) : void {
-        self::Log($log, 'info');
+    public static function INFO(string $log, string $user = 'unknown') : void {
+        self::Log($log, 'info', $user);
     }
 
-    public static function ERROR(string $log) : void {
-        self::Log($log, 'error');
+    public static function ERROR(string $log, string $user = 'unknown') : void {
+        self::Log($log, 'error', $user);
     }
 
-    public static function SQL(string $sql, int $count, array $placeHolder = []) : void {
+    public static function SQL(string $sql, int $count, array $placeHolder = [], string $user = 'unknown') : void {
         $tmp[] = "影響件数 = {$count}";
         $tmp[] = $sql;
         if ($placeHolder !== []) {
@@ -37,6 +39,6 @@ class Logger implements LoggerInterface {
                 $tmp[] = "Parameter = {$row['parameter']}, Value = {$row['value']}, Type = {$row['type']}";
             }
         }
-        self::Log(join("\n", $tmp), 'sql');
+        self::Log(join("\n", $tmp), 'sql', $user);
     }
 }
