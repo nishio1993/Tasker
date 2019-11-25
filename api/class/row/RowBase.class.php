@@ -19,7 +19,7 @@ abstract class RowBase extends Base {
      */
     public function __construct(array $keyValue = []) {
         if ($keyValue !== []) {
-            foreach($keyValue as $key => $column) {
+            foreach($keyValue as $key => $value) {
                 $this->data[$key] = $value;
             }
         }
@@ -60,6 +60,7 @@ abstract class RowBase extends Base {
      * @return  array
      */
     public function toArray() : array {
+        $tableName = get_called_class();
         return $this->data;
     }
 
@@ -88,7 +89,7 @@ abstract class RowBase extends Base {
      * @param boolean $orderby
      * @return array
      */
-    protected static function select(array $select = [], array $where = [], array $orderby = []) : array {
+    protected static function select(array $select = [], array $where = [], array $orderby = []) {
         $tableName = get_called_class();
         $sql = [];
         $sql[] = "SELECT";
@@ -102,11 +103,12 @@ abstract class RowBase extends Base {
         } else {
             $sql[] = "    *";
         }
+        //FROM
         $sql[] = "FROM";
         $sql[] = "    {$tableName}";
-        $sql[] = "WHERE";
-        $sql[] = "    1 = 1";
+        //WHERE
         if ($where !== []) {
+            $sql[] = "WHERE";
             $tmp = [];
             foreach($where as $col => $val) {
                 if (is_array($val)) {
@@ -122,6 +124,7 @@ abstract class RowBase extends Base {
             }
             $sql[] = join("\nAND ", $tmp);
         }
+        //ORDER BY
         if ($orderby !== []) {
             $tmp = [];
             foreach($orderby as $col => $order) {
@@ -129,16 +132,21 @@ abstract class RowBase extends Base {
             }
             $sql[] = join("\n,", $tmp);
         }
+
         $placeHolder = DBFacade::CreatePlaceHolder($where);
         $result = DBFacade::Execute(join("\n", $sql), $placeHolder);
+
+        //結果が無い場合[]返却
         if ($result === []) {
             return [];
+        //1件の場合KeyValue返却
         } else if (count($result) === 1) {
             $columnList = [];
             foreach($result[0] as $key => $value) {
-                $columnList[] = new $key($value);
+                $columnList[$key] = ($value);
             }
             return new $tableName($columnList);
+        //2件以上の場合テーブル配列返却
         } else {
             $rowList = [];
             foreach($result as $row) {
@@ -196,20 +204,20 @@ abstract class RowBase extends Base {
      */
     protected function update() : int {
         $tableName = get_called_class();
-        $propertyList = get_class_vars();
+        $propertyList = $this->data;
         $sql = [];
         $sql[] = "UPDATE ".$tableName;
-        $sql[] = "SET\n    ";
+        $sql[] = "SET";
         $tmp = [];
         $propertyList = [];
         foreach($tableName::FIELD as $key){
             if (isset($this->data[$key])) {
-                $tmp[] = $key." = ".$key;
+                $tmp[] = $key." = :".$key;
                 $propertyList[$key] = $this->data[$key];
             }
         }
         $sql[] = join(",", $tmp);
-        $sql[] = "WHERE\n    ";
+        $sql[] = "WHERE";
         $tmp = [];
         foreach($tableName::PRIMARY_KEY as $primaryKey) {
             $tmp[] = $primaryKey." = :".$primaryKey;

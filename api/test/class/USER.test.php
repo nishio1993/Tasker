@@ -5,27 +5,31 @@ require_once('class/row/USER.class.php');
 require_once('class/Security.class.php');
 
 class USERtest extends TestCase {
+    public function setUp() : void {
+        DBFacade::Connect();
+    }
     /**
-     * 引数無し生成不可能
+     * 引数無し生成可能
      *
      * @test
+     * @doesNotPerformAssertions
      */
     public function Construct() {
-        $this->expectException(Error::class);
         $USER = new USER();
     }
 
     /**
-     * クラス配列から生成
+     * 配列から生成
      *
      * @test
      * @doesNotPerformAssertions
      */
     public function ConstructByClass() {
-        $MAIL = new MAIL('test@test.com');
-        $PASSWORD = new PASSWORD(Security::ToHash('password'));
-        $NAME = new NAME('HogeFuga');
-        $USER = new USER([$MAIL, $PASSWORD, $NAME]);
+        $parameter = [];
+        $parameter['MAIL'] = 'test@test.com';
+        $parameter['NAME'] = 'テスト太郎';
+        $parameter['PASSWORD'] = 'password';
+        $USER = new USER($parameter);
     }
 
     /**
@@ -47,15 +51,15 @@ class USERtest extends TestCase {
      * @test
      */
     public function Regist() {
-        $MAIL = new MAIL('test@test.com');
-        $PASSWORD = new PASSWORD(Security::ToHash('password'));
-        $NAME = new NAME('HogeFuga');
-        $USER = new USER([$MAIL, $PASSWORD, $NAME]);
-        $this->assertNull($USER->Get('CREATE_DATETIME'));
-        $this->assertNull($USER->Get('UPDATE_DATETIME'));
-        $USER->Regist();
-        $this->assertNotNull($USER->Get('CREATE_DATETIME'));
-        $this->assertNotNull($USER->Get('UPDATE_DATETIME'));
+        $MAIL = 'sample@sample.com';
+        $PASSWORD = Security::ToHash('password');
+        $NAME = 'HogeFuga';
+        $USER = new USER(['MAIL' => $MAIL, 'PASSWORD' => $PASSWORD, 'NAME' => $NAME]);
+        $this->assertNull($USER->CREATE_DATETIME);
+        $this->assertNull($USER->UPDATE_DATETIME);
+        $this->assertSame($USER->regist(), 1);
+        $this->assertNotNull($USER->CREATE_DATETIME);
+        $this->assertNotNull($USER->UPDATE_DATETIME);
     }
 
     /**
@@ -64,13 +68,13 @@ class USERtest extends TestCase {
      * @test
      */
     public function FindByMAIL() {
-        $MAIL = new MAIL('test@test.com');
-        $USER = USER::FindByMAIL($MAIL);
-        $this->assertSame($USER->Get('MAIL'), $MAIL->Get('test@test.com'));
-        $this->assertSame($USER->Get('NAME'), 'HogeFuga');
-        $this->assertTrue(VerifyHash('password', $USER->Get('PASSWORD')));
-        $this->assertNotNull($USER->Get('CREATE_DATETIME'));
-        $this->assertNotNull($USER->Get('UPDATE_DATETIME'));
+        $MAIL = 'sample@sample.com';
+        $USER = USER::findByMAIL($MAIL);
+        $this->assertSame($USER->MAIL, 'sample@sample.com');
+        $this->assertSame($USER->NAME, 'HogeFuga');
+        $this->assertTrue(Security::VerifyHash('password', $USER->PASSWORD));
+        $this->assertNotNull($USER->CREATE_DATETIME);
+        $this->assertNotNull($USER->UPDATE_DATETIME);
     }
 
     /**
@@ -79,17 +83,17 @@ class USERtest extends TestCase {
      * @test
      */
     public function Save() {
-        $MAIL = new MAIL('test@test.com');
+        $MAIL = 'sample@sample.com';
         $USER = USER::FindByMAIL($MAIL);
-        $USER->Set('NAME', 'FooBar');
-        $USER->Set('PASSWORD', Security::ToHash('newpassword'));
-        $USER->Save();
-        $USER2 = USER::FindByMAIL($MAIL);
-        $this->assertSame($MAIL->Get(), $USER2->Get('MAIL'));
-        $this->assertSame('FooBar', $USER2->Get('NAME'));
-        $this->assertTrue(Security::VerifyHash('newpassword', $USER2->Get('PASSWORD')));
-        $this->assertSame($USER->Get('CREATE_DATETIME'), $USER2->Get('CREATE_DATETIME'));
-        $this->assertSame($USER->Get('UPDATE_DATETIME'), $USER2->Get('UPDATE_DATETIME'));
+        $USER->NAME = 'FooBar';
+        $USER->PASSWORD = Security::ToHash('newpassword');
+        $USER->save();
+        $USER2 = USER::findByMAIL($MAIL);
+        $this->assertSame($MAIL, $USER2->MAIL);
+        $this->assertSame('FooBar', $USER2->NAME);
+        $this->assertTrue(Security::VerifyHash('newpassword', $USER2->PASSWORD));
+        $this->assertSame($USER->CREATE_DATETIME, $USER2->CREATE_DATETIME);
+        $this->assertSame($USER->UPDATE_DATETIME, $USER2->UPDATE_DATETIME);
     }
 
     /**
@@ -99,22 +103,22 @@ class USERtest extends TestCase {
      */
     public function NoKeyRegist() {
         $this->expectException(RuntimeException::class);
-        $PASSWORD = new PASSWORD(Security::ToHash('password'));
-        $NAME = new NAME('HogeFuga');
-        $USER = new USER([$PASSWORD, $NAME]);
-        $USER->Regist();
+        $PASSWORD = Security::ToHash('password');
+        $NAME = 'HogeFuga';
+        $USER = new USER(['PASSWORD' => $PASSWORD, 'NAME' => $NAME]);
+        $USER->regist();
     }
 
     /**
-     * 主キーさえあれば登録可能
+     * 名前とパスワード無し登録不可能
      *
      * @test
-     * @doesNotPerformAssertions
      */
     public function NoValueRegist() {
+        $this->expectException(RuntimeException::class);
         $MAIL = new MAIL('example@example.com');
-        $USER = new USER([$MAIL]);
-        $USER->Regist();
+        $USER = new USER(['MAIL' => $MAIL]);
+        $USER->regist();
     }
 
     /**
@@ -125,8 +129,8 @@ class USERtest extends TestCase {
     public function NoKeySave() {
         $this->expectException(RuntimeException::class);
         $NAME = new NAME('HOGEHOGE');
-        $USER = new USER([$NAME]);
-        $USER->Save();
+        $USER = new USER(['NAME' => $NAME]);
+        $USER->save();
     }
     
     /**
@@ -135,13 +139,11 @@ class USERtest extends TestCase {
      * @test
      */
     public function Unregist() {
-        $MAIL = new MAIL('test@test.com');
+        $MAIL = 'sample@sample.com';
         $USER = USER::FindByMAIL($MAIL);
-        $USER->Unregist();
-        $USER = USER::FindByMAIL($MAIL);
-        $this->assertSame($USER, []);
-        $USER->Set('MAIL', new MAIL('example@example.com'));
-        $USER->Unregist();
+        $this->assertSame($USER->unregist(), 1);
+        $USER2 = USER::findByMAIL($MAIL);
+        $this->assertSame($USER2, []);
     }
     
     /**
@@ -151,8 +153,8 @@ class USERtest extends TestCase {
      */
     public function UnregistNoUSER() {
         $this->expectException(RuntimeException::class);
-        $MAIL = new MAIL('test@test.com');
-        $USER = new USER([$MAIL]);
-        $USER->Unregist();
+        $MAIL = 'sample@sample.com';
+        $USER = new USER(['MAIL' => $MAIL]);
+        $USER->unregist();
     }
 }

@@ -10,7 +10,7 @@ class USER extends RowBase {
     const FIELD = ['MAIL', 'NAME', 'PASSWORD', 'CREATE_DATETIME', 'UPDATE_DATETIME'];
     const PRIMARY_KEY = ['MAIL'];
 
-    public static function findByMAIL(string $MAIL) : array {
+    public static function findByMAIL(string $MAIL) {
         return parent::select([], ['MAIL' => $MAIL], []);
     }
 
@@ -27,7 +27,7 @@ class USER extends RowBase {
 
     public function save() : int {
         $datetime = new DateTimeImmutable();
-        $this->UPDATE_DATETIME = new UPDATE_DATETIME($datetime->format('Y-m-d H:i:s'));
+        $this->UPDATE_DATETIME = $datetime->format('Y-m-d H:i:s');
         $result = parent::update();
         if ($result === 0) {
             throw new RuntimeException('Failure USER->Save()');

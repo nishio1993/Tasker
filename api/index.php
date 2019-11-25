@@ -3,12 +3,12 @@ require_once('class/Logger.class.php');
 require_once('class/DBFacade.class.php');
 header("Content-Type: application/json; charset=utf-8");
 header("X-Content-Type-Options: nosniff");
-//echo print_r($_SERVER, true);
+
 $PATH_INFO = (string)filter_input(INPUT_SERVER, 'PATH_INFO');
 if (empty($PATH_INFO)) {
     return;
 }
-//echo('controller'.$PATH_INFO.'.api.php');
+
 if (file_exists('controller'.$PATH_INFO.'.api.php')) {
     try {
         require_once('controller'.$PATH_INFO.'.api.php');

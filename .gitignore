@@ -91,4 +91,5 @@ sw.*
 
 # vendor
 api/vendor/
+api/ProgramData/
 .zip

@@ -12,7 +12,8 @@ function GET() {
             $response['error']['message'] = 'メールアドレスが正しい形式ではありません。';
             return $response;
         }
-        $response['result']['USER'] = USER::findByMAIL($MAIL)->toArray();
+        $USER = USER::findByMAIL($MAIL);
+        $response['result']['USER'] = $USER->toArray();
         return $response;
     } else if (is_array($_GET['MAIL'])) {
         $MAILList = filter_input(INPUT_GET, 'MAIL', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);

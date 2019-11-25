@@ -9,9 +9,9 @@
             "type": "php",
             "request": "launch",
             "port": 9000,
-            "stopOnEntry": true,
+            "stopOnEntry": false,
             "pathMappings": {
-                "/var/www/test": "D:\\Project\\Tasker\\api"
+                "D:\\Project\\Tasker\\api": "D:\\Project\\Tasker\\api"
             }
         },
         {
