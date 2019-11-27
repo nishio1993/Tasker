@@ -17,7 +17,7 @@ class usertest extends TestCase {
     /**
      * @test
      */
-    public function correctPOST() {
+    public function MAILとNAMEとPASSWORDが揃えば登録可能() {
         $res = $this->client->post($this->uri, [
             'form_params' => [
                 'MAIL'     => urlencode('test@test.com'),
@@ -32,11 +32,26 @@ class usertest extends TestCase {
     }
 
     /**
-     * 重複不可能
-     * 
      * @test
      */
-    public function incorrectPOST1() {
+    public function MAILが被らなければ登録可能() {
+        $res = $this->client->post($this->uri, [
+            'form_params' => [
+                'MAIL'     => urlencode('sample@sample.com'),
+                'NAME'     => urlencode('テスト太郎'),
+                'PASSWORD' => urlencode('password')
+            ],
+        ]);
+
+        $response = json_decode($res->getBody());
+        $this->assertFalse(isset($response->error));
+        $this->assertSame($response->result, 1);
+    }
+
+    /**
+     * @test
+     */
+    public function MAILが被ると登録不可能() {
         $res = $this->client->post($this->uri, [
             'form_params' => [
                 'MAIL'     => urlencode('test@test.com'),
@@ -53,11 +68,9 @@ class usertest extends TestCase {
     }
 
     /**
-     * MAIL無し不可能
-     * 
      * @test
      */
-    public function incorrectPOST2() {
+    public function MAILが無いと登録不可能() {
         $res = $this->client->post($this->uri, [
             'form_params' => [
                 'NAME'     => urlencode('テスト太郎'),
@@ -68,16 +81,14 @@ class usertest extends TestCase {
         ]);
 
         $response = json_decode($res->getBody());
-        $this->AssertTrue(isset($response->error['MAIL']));
+        $this->AssertSame($response->error->reason[0], 'MAIL');
         $this->assertFalse(isset($response->result));
     }
 
     /**
-     * MAIL空欄不可能
-     * 
      * @test
      */
-    public function incorrectPOST3() {
+    public function MAILが空欄だと登録不可能() {
         $res = $this->client->post($this->uri, [
             'form_params' => [
                 'MAIL'     => urlencode(''),
@@ -94,11 +105,9 @@ class usertest extends TestCase {
     }
 
     /**
-     * NAMEPASSWORD空欄不可能
-     * 
      * @test
      */
-    public function incorrectPOST4() {
+    public function NAMEかPASSWORDが空欄だと登録不可能() {
         $res = $this->client->post($this->uri, [
             'form_params' => [
                 'MAIL'     => urlencode('sample@sample.com')
@@ -115,28 +124,52 @@ class usertest extends TestCase {
     /**
      * @test
      */
-    public function correctGET() {
+    public function MAIL単一指定でUSER一つ取得() {
         $res = $this->client->get($this->uri, [
             'query' => [
                 'MAIL' => urlencode('test@test.com')
             ],
         ]);
 
-        $object = json_decode($res->getBody());
-        $this->assertSame($object->USER['MAIL'], 'test@test.com');
-        $this->assertSame($object->USER['NAME'], 'テスト太郎');
-        $this->assertNull($object->USER['PASSWORD']);
-        $this->assertNotNull($object->USER['CREATE_DATETIME']);
-        $this->assertNotNull($object->USER['UPDATE_DATETIME']);
-        $this->assertNull($object->error);
+        $response = json_decode($res->getBody());
+        $this->assertSame($response->USER->MAIL, 'test@test.com');
+        $this->assertSame($response->USER->NAME, 'テスト太郎');
+        $this->assertFalse(isset($response->USER->PASSWORD));
+        $this->assertTrue(isset($response->USER->CREATE_DATETIME));
+        $this->assertTrue(isset($response->USER->UPDATE_DATETIME));
+        $this->assertFalse(isset($response->error));
     }
 
     /**
-     * MAIL空欄不可能
-     * 
      * @test
      */
-    public function incorrectGET() {
+    public function MAIL複数指定でUSER複数取得() {
+        $res = $this->client->get($this->uri, [
+            'query' => [
+                'MAIL' => [
+                    urlencode('test@test.com'),
+                    urlencode('sample@sample.com')
+                ]
+            ]
+        ]);
+
+        $response = json_decode($res->getBody());
+        $this->assertSame($response->USER[0]['MAIL'], 'test@test.com');
+        $this->assertSame($response->USER[0]['NAME'], 'テスト太郎');
+        $this->assertFalse(isset($response->USER[0]['PASSWORD']));
+        $this->assertTrue(isset($response->USER[0]['CREATE_DATETIME']));
+        $this->assertTrue(isset($response->USER[0]['UPDATE_DATETIME']));
+        $this->assertSame($response->USER[1]['MAIL'], 'sample@sample.com');
+        $this->assertSame($response->USER[1]['NAME'], 'テスト太郎');
+        $this->assertFalse(isset($response->USER[1]['PASSWORD']));
+        $this->assertTrue(isset($response->USER[1]['CREATE_DATETIME']));
+        $this->assertTrue(isset($response->USER[1]['UPDATE_DATETIME']));
+    }
+
+    /**
+     * @test
+     */
+    public function MAIL空欄だと取得不可能() {
         $res = $this->client->get($this->uri, [
             'query' => [
                 'MAIL' => urlencode('')
@@ -145,38 +178,39 @@ class usertest extends TestCase {
             'http_errors' => false
         ]);
 
-        $object = json_decode($res->getBody());
-        $this->assertTrue(isset($response->error));
+        $response = json_decode($res->getBody());
+        $this->assertSame($response->error->reason[0], 'MAIL');
+        $this->assertTrue(isset($response->error->message));
         $this->assertFalse(isset($response->result));
     }
 
     /**
      * @test
      */
-    public function correctPUT() {
+    public function QueryにMAIL、BodyにNAMEかPASSWORDで更新可能() {
         $res = $this->client->put($this->uri, [
             'query' => [
-                'MAIL'     => urlencode('test@test.com'),
-                'NAME'     => urlencode('太郎テスト'),
-                'PASSWORD' => urlencode('pass')
+                'MAIL'     => urlencode('test@test.com')
             ],
+            'body' => [
+                'NAME' => urlencode('太郎テスト'),
+                'PASSWORD' => urlencode('pass')
+            ]
         ],[
             'http_errors' => false
         ]);
 
-        $object = json_decode($res->getBody());
-        $this->assertNull($response->error);
+        $response = json_decode($res->getBody());
+        $this->assertFalse(isset($response->error));
         $this->assertSame($response->result, 1);
     }
 
     /**
-     * MAIL空欄不可能
-     * 
      * @test
      */
-    public function incorrectPUT1() {
-        $res = $this->client->get($this->uri, [
-            'query' => [
+    public function QueryにMAILが無ければ更新不可能() {
+        $res = $this->client->put($this->uri, [
+            'body' => [
                 'NAME'     => urlencode('太郎テスト'),
                 'PASSWORD' => urlencode('pass')
             ],
@@ -184,18 +218,17 @@ class usertest extends TestCase {
             'http_errors' => false
         ]);
 
-        $object = json_decode($res->getBody());
-        $this->assertTrue(isset($response->error));
+        $response = json_decode($res->getBody());
+        $this->assertSame($response->error->reason[0], 'MAIL');
+        $this->assertTrue(isset($response->error->message));
         $this->assertFalse(isset($response->result));
     }
 
     /**
-     * NAMEPASSWORD空欄不可能
-     * 
      * @test
      */
-    public function incorrectPUT2() {
-        $res = $this->client->get($this->uri, [
+    public function BodyにNAMEかPASSWORDが無ければ更新不可能() {
+        $res = $this->client->put($this->uri, [
             'query' => [
                 'MAIL'     => urlencode('test@test.com')
             ],
@@ -203,15 +236,17 @@ class usertest extends TestCase {
             'http_errors' => false
         ]);
 
-        $object = json_decode($res->getBody());
-        $this->assertTrue(isset($response->error));
+        $response = json_decode($res->getBody());
+        $this->assertSame($response->error->reason[0], 'NAME');
+        $this->assertSame($response->error->reason[1], 'PASSWORD');
+        $this->assertTrue(isset($response->error->message));
         $this->assertFalse(isset($response->result));
     }
 
     /**
      * @test
      */
-    public function correctDELETE() {
+    public function QueryにMAILがあれば削除可能() {
         $res = $this->client->delete($this->uri, [
             'query' => [
                 'MAIL' => urlencode('test@test.com')
@@ -222,6 +257,23 @@ class usertest extends TestCase {
 
         $response = json_decode($res->getBody());
         $this->assertSame($response->result, 1);
-        $this->assertNull($response->error);
+        $this->assertFalse(isset($response->error));
+    }
+
+    /**
+     * @test
+     */
+    public function QueryにMAILがあれば削除可能2() {
+        $res = $this->client->delete($this->uri, [
+            'query' => [
+                'MAIL' => urlencode('sample@sample.com')
+            ],
+        ],[
+            'http_errors' => false
+        ]);
+
+        $response = json_decode($res->getBody());
+        $this->assertSame($response->result, 1);
+        $this->assertFalse(isset($response->error));
     }
 }

@@ -10,8 +10,12 @@ class USER extends RowBase {
     const FIELD = ['MAIL', 'NAME', 'PASSWORD', 'CREATE_DATETIME', 'UPDATE_DATETIME'];
     const PRIMARY_KEY = ['MAIL'];
 
-    public static function findByMAIL(string $MAIL) {
-        return parent::select([], ['MAIL' => $MAIL], []);
+    public static function findByMAIL($MAIL) {
+        if (is_string($MAIL) || is_array($MAIL)) {
+            return parent::select([], ['MAIL' => $MAIL], []);
+        } else {
+            throw new RuntimeException('Failure USER->findByMAIL()');
+        }
     }
 
     public function regist() : int {
