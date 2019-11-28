@@ -1,5 +1,5 @@
 <?php
-require_once('class/row/PROJECT.class.php');
+require_once('class/record/PROJECT.class.php');
 
 function GET() {
 

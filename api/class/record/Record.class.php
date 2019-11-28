@@ -1,13 +1,14 @@
 <?php
-include_once('class/DBFacade.class.php');
-require_once('class/Base.class.php');
+require_once('class/DBFacade.class.php');
+
 /**
  * ローベースクラス
  */
-abstract class RowBase extends Base {
+abstract class Record
+{
     protected $data = [];
     const FIELD = [];
-    const PRIMARY_KEY = [];
+    const KEY = [];
 
     /**
      * コンストラクタ
@@ -17,7 +18,8 @@ abstract class RowBase extends Base {
      *
      * @param array $columnList
      */
-    public function __construct(array $keyValue = []) {
+    public function __construct(array $keyValue = [])
+    {
         if ($keyValue !== []) {
             foreach($keyValue as $key => $value) {
                 $this->data[$key] = $value;
@@ -33,7 +35,8 @@ abstract class RowBase extends Base {
      * @param   string  $key     プロパティ名
      * @return  mixed
      */
-    public function __get(string $key) {
+    public function __get(string $key)
+    {
         return  isset($this->data[$key])
                 ? $this->data[$key]
                 : null;
@@ -48,7 +51,8 @@ abstract class RowBase extends Base {
      * @param   mixed     $value    値
      * @return  void
      */
-    public function __set(string $key, $value) : void {
+    public function __set(string $key, $value): void
+    {
         $this->data[$key] = $value;
     }
 
@@ -59,20 +63,35 @@ abstract class RowBase extends Base {
      *
      * @return  array
      */
-    public function toArray() : array {
-        $tableName = get_called_class();
+    public function toArray(): array
+    {
         return $this->data;
+    }
+
+    /**
+     * カラム配列取得
+     * 
+     * カラム名の配列を返却する。
+     *
+     * @return array
+     */
+    public static function getField(): array
+    {
+        $tableName = get_called_class();
+        return $tableName::FIELD;
     }
 
     /**
      * 主キー配列取得
      * 
-     * 主キーカラム名の配列を返却する。
+     * 主キーの配列を返却する。
      *
      * @return array
      */
-    public static function getPrimaryKey() : array {
-        return PRIMARY_KEY;
+    public static function getPrimaryKey(): array
+    {
+        $tableName = get_called_class();
+        return $tableName::KEY;
     }
 
     /**
@@ -89,7 +108,8 @@ abstract class RowBase extends Base {
      * @param boolean $orderby
      * @return array
      */
-    protected static function select(array $select = [], array $where = [], array $orderby = []) {
+    protected static function select(array $select = [], array $where = [], array $orderby = [])
+    {
         $tableName = get_called_class();
         $sql = [];
         $sql[] = "SELECT";
@@ -133,6 +153,7 @@ abstract class RowBase extends Base {
             $sql[] = join("\n,", $tmp);
         }
 
+        //SQL実行
         $placeHolder = DBFacade::CreatePlaceHolder($where);
         $result = DBFacade::Execute(join("\n", $sql), $placeHolder);
 
@@ -140,7 +161,7 @@ abstract class RowBase extends Base {
         if ($result === []) {
             return [];
         //1件の場合KeyValue返却
-        } else if (count($result) === 1) {
+        } elseif (count($result) === 1) {
             $columnList = [];
             foreach($result[0] as $key => $value) {
                 $columnList[$key] = ($value);
@@ -152,7 +173,7 @@ abstract class RowBase extends Base {
             foreach($result as $row) {
                 $columnList = [];
                 foreach($row as $key => $value) {
-                    $columnList[] = new $key($value);
+                    $columnList[$key] = $value;
                 }
                 $rowList[] = new $tableName($columnList);
             }
@@ -168,7 +189,8 @@ abstract class RowBase extends Base {
      *
      * @return int
      */
-    protected function insert() : int {
+    protected function insert(): int
+    {
         $sql = [];
         $tableName = get_called_class();
         $sql[] = "INSERT INTO {$tableName}";
@@ -202,7 +224,8 @@ abstract class RowBase extends Base {
      * @param array $where  列名配列
      * @return int
      */
-    protected function update() : int {
+    protected function update(): int
+    {
         $tableName = get_called_class();
         $propertyList = $this->data;
         $sql = [];
@@ -219,7 +242,7 @@ abstract class RowBase extends Base {
         $sql[] = join(",", $tmp);
         $sql[] = "WHERE";
         $tmp = [];
-        foreach($tableName::PRIMARY_KEY as $primaryKey) {
+        foreach($tableName::KEY as $primaryKey) {
             $tmp[] = $primaryKey." = :".$primaryKey;
         }
         $sql[] = join("\nAND ", $tmp);
@@ -236,7 +259,8 @@ abstract class RowBase extends Base {
      * @param array $key    列名配列
      * @return void
      */
-    protected function delete() : int {
+    protected function delete(): int
+    {
         $tableName = get_called_class();
         $placeHolder = [];
         $sql = [];
@@ -244,40 +268,12 @@ abstract class RowBase extends Base {
         $sql[] = "WHERE\n    ";
         $tmp = [];
         $placeHolder = [];
-        foreach($tableName::PRIMARY_KEY as $primaryKey) {
+        foreach($tableName::KEY as $primaryKey) {
             $tmp[] = $primaryKey." = :".$primaryKey;
             $placeHolder[$primaryKey] = $this->data[$primaryKey];
         }
         $sql[] = join("\nAND ", $tmp);
         $placeHolder = DBFacade::CreatePlaceHolder($placeHolder);
         return DBFacade::Execute(join("\n", $sql), $placeHolder);
-    }
-
-    /**
-     * テーブルクラス配列返却関数
-     * 
-     * テーブルクラス配列を返却する。
-     *
-     * @param   array $result テーブル形式配列
-     * @return  array マスタクラス配列
-     */
-    protected static function returnRowList(array $result) : array {
-        $rowList = [];
-        $tableName = get_called_class();
-        foreach($result as $row){
-            $rowList[] = new $tableName($row);
-        }
-        return $rowList;
-    }
-
-    /**
-     * カラム一覧返却関数
-     * 
-     * テーブルクラスをテーブル形式配列に変換して返却する。
-     *
-     * @return  array テーブル形式配列
-     */
-    public static function returnColumnList() : array {
-        return array_keys(get_class_vars());
     }
 }

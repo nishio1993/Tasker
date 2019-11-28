@@ -1,14 +1,14 @@
 <?php
-require_once('class/row/RowBase.class.php');
+require_once('class/record/Record.class.php');
 require_once('class/column/MAIL.class.php');
 require_once('class/column/PASSWORD.class.php');
 require_once('class/column/NAME.class.php');
 require_once('class/column/CREATE_DATETIME.class.php');
 require_once('class/column/UPDATE_DATETIME.class.php');
 require_once('class/Security.class.php');
-class USER extends RowBase {
+class USER extends Record {
     const FIELD = ['MAIL', 'NAME', 'PASSWORD', 'CREATE_DATETIME', 'UPDATE_DATETIME'];
-    const PRIMARY_KEY = ['MAIL'];
+    const KEY = ['MAIL'];
 
     public static function findByMAIL($MAIL) {
         if (is_string($MAIL) || is_array($MAIL)) {

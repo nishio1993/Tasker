@@ -10,7 +10,7 @@ class MAILtest extends TestCase {
      * @test
      */
     public function HalfCharOK() {
-        $this->assertTrue(MAIL::isCorrectValue('test@test.com'));
+        $this->assertTrue(MAIL::isValid('test@test.com'));
     }
 
     /**
@@ -19,7 +19,7 @@ class MAILtest extends TestCase {
      * @test
      */
     public function FullCharOK() {
-        $this->assertTrue(MAIL::isCorrectValue('TEST@TEST.COM'));
+        $this->assertTrue(MAIL::isValid('TEST@TEST.COM'));
     }
 
     /**
@@ -28,7 +28,7 @@ class MAILtest extends TestCase {
      * @test
      */
     public function EmptyNG() {
-        $this->assertFalse(MAIL::isCorrectValue(''));
+        $this->assertFalse(MAIL::isValid(''));
     }
 
     /**
@@ -37,7 +37,7 @@ class MAILtest extends TestCase {
      * @test
      */
     public function NullNG() {
-        $this->assertFalse(MAIL::isCorrectValue(null));
+        $this->assertFalse(MAIL::isValid(null));
     }
 
     /**
@@ -46,7 +46,7 @@ class MAILtest extends TestCase {
      * @test
      */
     public function NoAtNG() {
-        $this->assertFalse(MAIL::isCorrectValue('TESTTEST.COM'));
+        $this->assertFalse(MAIL::isValid('TESTTEST.COM'));
     }
 
     /**
@@ -55,7 +55,7 @@ class MAILtest extends TestCase {
      * @test
      */
     public function MultiByteNG() {
-        $this->assertFalse(MAIL::isCorrectValue('ｔｅｓｔ＠ｔｅｓｔ．ｃｏｍ'));
+        $this->assertFalse(MAIL::isValid('ｔｅｓｔ＠ｔｅｓｔ．ｃｏｍ'));
     }
 
     /**
@@ -64,7 +64,7 @@ class MAILtest extends TestCase {
      * @test
      */
     public function OnePeriodOK() {
-        $this->assertTrue(MAIL::isCorrectValue('TE.ST@TEST.COM'));
+        $this->assertTrue(MAIL::isValid('TE.ST@TEST.COM'));
     }
 
     /**
@@ -73,7 +73,7 @@ class MAILtest extends TestCase {
      * @test
      */
     public function TwoPeriodNG() {
-        $this->assertFalse(MAIL::isCorrectValue('TE..ST@TEST.COM'));
+        $this->assertFalse(MAIL::isValid('TE..ST@TEST.COM'));
     }
 
     /**
@@ -82,7 +82,7 @@ class MAILtest extends TestCase {
      * @test
      */
     public function FirstPeriodNG() {
-        $this->assertFalse(MAIL::isCorrectValue('.test@test.com'));
+        $this->assertFalse(MAIL::isValid('.test@test.com'));
     }
 
     /**
@@ -91,7 +91,7 @@ class MAILtest extends TestCase {
      * @test
      */
     public function LastPeriodNG() {
-        $this->assertFalse(MAIL::isCorrectValue('test.@test.com'));
+        $this->assertFalse(MAIL::isValid('test.@test.com'));
     }
 
     /**
@@ -100,7 +100,7 @@ class MAILtest extends TestCase {
      * @test
      */
     public function CorrectSymbolOK() {
-        $this->assertTrue(MAIL::isCorrectValue('-._@test.com'));
+        $this->assertTrue(MAIL::isValid('-._@test.com'));
     }
 
     /**
@@ -109,7 +109,7 @@ class MAILtest extends TestCase {
      * @test
      */
     public function NotCorrectSymbolNG() {
-        $this->assertFalse(MAIL::isCorrectValue('\\[,]"\'@test.com'));
+        $this->assertFalse(MAIL::isValid('\\[,]"\'@test.com'));
     }
     
     /**
@@ -118,7 +118,7 @@ class MAILtest extends TestCase {
      * @test
      */
     public function Length256OK() {
-        $this->assertTrue(MAIL::isCorrectValue('1234567890abcdefghij123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890@123456789012345678901234567890123456789012345678901.com'));
+        $this->assertTrue(MAIL::isValid('1234567890abcdefghij123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890@123456789012345678901234567890123456789012345678901.com'));
     }
     
     /**
@@ -128,6 +128,6 @@ class MAILtest extends TestCase {
      * @expectedException Exception
      */
     public function Length257NG() {
-        $this->assertFalse(MAIL::isCorrectValue('12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890@1234567890123456789012345678901234567890123456789012.com'));
+        $this->assertFalse(MAIL::isValid('12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890@1234567890123456789012345678901234567890123456789012.com'));
     }
 }

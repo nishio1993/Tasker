@@ -8,7 +8,7 @@ class test extends TestCase {
      */
     public function HashOK() {
         $hash = PASSWORD::toHash('password');
-        $this->assertTrue(PASSWORD::isCorrectValue($hash));
+        $this->assertTrue(PASSWORD::isValid($hash));
     }
 
     /**
@@ -17,7 +17,7 @@ class test extends TestCase {
      * @test
      */
     public function EmptyNG() {
-        $this->assertFalse(PASSWORD::isCorrectValue(''));
+        $this->assertFalse(PASSWORD::isValid(''));
     }
 
     /**
@@ -26,7 +26,7 @@ class test extends TestCase {
      * @test
      */
     public function NullNG() {
-        $this->assertFalse(PASSWORD::isCorrectValue(null));
+        $this->assertFalse(PASSWORD::isValid(null));
     }
 
     /**

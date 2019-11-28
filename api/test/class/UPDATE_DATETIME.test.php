@@ -10,7 +10,7 @@ class UPDATE_DATETIMEtest extends TestCase {
      * @test
      */
     public function haifunOK() {
-        $this->assertTrue(UPDATE_DATETIME::isCorrectValue('2020-01-01 00:00:00'));
+        $this->assertTrue(UPDATE_DATETIME::isValid('2020-01-01 00:00:00'));
     }
     
     /**
@@ -19,7 +19,7 @@ class UPDATE_DATETIMEtest extends TestCase {
      * @test
      */
     public function slashOK() {
-        $this->assertTrue(UPDATE_DATETIME::isCorrectValue('2020/01/01 00:00:00'));
+        $this->assertTrue(UPDATE_DATETIME::isValid('2020/01/01 00:00:00'));
     }
     
     /**
@@ -28,7 +28,7 @@ class UPDATE_DATETIMEtest extends TestCase {
      * @test
      */
     public function noneOK() {
-        $this->assertTrue(UPDATE_DATETIME::isCorrectValue('20200101000000'));
+        $this->assertTrue(UPDATE_DATETIME::isValid('20200101000000'));
     }
     
     /**
@@ -37,7 +37,7 @@ class UPDATE_DATETIMEtest extends TestCase {
      * @test
      */
     public function japaneseOK() {
-        $this->assertTrue(UPDATE_DATETIME::isCorrectValue('2020年01月01日00時00分00秒'));
+        $this->assertTrue(UPDATE_DATETIME::isValid('2020年01月01日00時00分00秒'));
     }
     
     /**
@@ -46,7 +46,7 @@ class UPDATE_DATETIMEtest extends TestCase {
      * @test
      */
     public function YmdNG() {
-        $this->assertFalse(UPDATE_DATETIME::isCorrectValue('2020-01-01'));
+        $this->assertFalse(UPDATE_DATETIME::isValid('2020-01-01'));
     }
     
     /**
@@ -55,7 +55,7 @@ class UPDATE_DATETIMEtest extends TestCase {
      * @test
      */
     public function HisNG() {
-        $this->assertFalse(UPDATE_DATETIME::isCorrectValue('12:34:56'));
+        $this->assertFalse(UPDATE_DATETIME::isValid('12:34:56'));
     }
 
     /**
@@ -64,6 +64,6 @@ class UPDATE_DATETIMEtest extends TestCase {
      * @test
      */
     public function stringNG() {
-        $this->assertFalse(UPDATE_DATETIME::isCorrectValue('yyyymmddhhiiss'));
+        $this->assertFalse(UPDATE_DATETIME::isValid('yyyymmddhhiiss'));
     }
 }

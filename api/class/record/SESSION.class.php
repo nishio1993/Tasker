@@ -6,7 +6,7 @@ require_once('./TOKEN.class.php');
 require_once('./START_DATETIME.class.php');
 require_once('./END_DATETIME.class.php');
 
-class SESSION extends RowBase {
+class SESSION extends Record {
     private $USER_ID, $TOKEN, $START_DATETIME, $END_DATETIME;
 
     public function Insert() {

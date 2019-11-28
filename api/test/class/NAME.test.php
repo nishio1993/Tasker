@@ -10,7 +10,7 @@ class NAMEtest extends TestCase {
      * @test
      */
     public function JapaneseOK() {
-        $this->assertTrue(NAME::isCorrectValue('テスト　太郎'));
+        $this->assertTrue(NAME::isValid('テスト　太郎'));
     }
 
     /**
@@ -19,7 +19,7 @@ class NAMEtest extends TestCase {
      * @test
      */
     public function EnglishOK() {
-        $this->assertTrue(NAME::isCorrectValue('Tarou Test'));
+        $this->assertTrue(NAME::isValid('Tarou Test'));
     }
 
     /**
@@ -28,7 +28,7 @@ class NAMEtest extends TestCase {
      * @test
      */
     public function EmptyNG() {
-        $this->assertFalse(NAME::isCorrectValue(''));
+        $this->assertFalse(NAME::isValid(''));
     }
 
     /**
@@ -37,34 +37,34 @@ class NAMEtest extends TestCase {
      * @test
      */
     public function NullNG() {
-        $this->assertFalse(NAME::isCorrectValue(null));
+        $this->assertFalse(NAME::isValid(null));
     }
 
     /**
      * @test
      */
     public function Half32OK() {
-        $this->assertTrue(NAME::isCorrectValue('12345678901234567890123456789012'));
+        $this->assertTrue(NAME::isValid('12345678901234567890123456789012'));
     }
 
     /**
      * @test
      */
     public function Full32OK() {
-        $this->assertTrue(NAME::isCorrectValue('１２３４５６７８９０１２３４５６７８９０１２３４５６７８９０１２'));
+        $this->assertTrue(NAME::isValid('１２３４５６７８９０１２３４５６７８９０１２３４５６７８９０１２'));
     }
 
     /**
      * @test
      */
     public function Half33NG() {
-        $this->assertFalse(NAME::isCorrectValue('123456789012345678901234567890123'));
+        $this->assertFalse(NAME::isValid('123456789012345678901234567890123'));
     }
 
     /**
      * @test
      */
     public function Full33NG() {
-        $this->assertFalse(NAME::isCorrectValue('１２３４５６７８９０１２３４５６７８９０１２３４５６７８９０１２３'));
+        $this->assertFalse(NAME::isValid('１２３４５６７８９０１２３４５６７８９０１２３４５６７８９０１２３'));
     }
 }

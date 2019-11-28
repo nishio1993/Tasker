@@ -1,6 +1,6 @@
 <?php
-require_once('class/row/USER.class.php');
-require_once('class/row/PROJECT.class.php');
+require_once('class/record/USER.class.php');
+require_once('class/record/PROJECT.class.php');
 
 function GET() {
     $MAIL = (string)filter_input(INPUT_GET, 'MAIL');
@@ -13,7 +13,7 @@ function GET() {
             $response[] = PROJECT::FindByPROJECT_CODE($PROJECT_CODE)->ToArray();
         }
         return json_encode($response);
-    } else if (empty($MAIL) && !empty($PROJECT_CODE)) {
+    } elseif (empty($MAIL) && !empty($PROJECT_CODE)) {
         $PROJECT_CODE = new PROJECT_CODE($PROJECT_CODE);
         $MAILList = USER_PROJECT::FindByPROJECT_CODE($PROJECT_CODE);
         $response = [];

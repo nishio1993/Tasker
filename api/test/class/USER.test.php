@@ -1,7 +1,7 @@
 <?php
 use PHPUnit\Framework\TestCase;
 require_once('vendor/autoload.php');
-require_once('class/row/USER.class.php');
+require_once('class/record/USER.class.php');
 require_once('class/Security.class.php');
 
 class USERtest extends TestCase {
