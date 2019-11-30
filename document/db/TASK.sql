@@ -1,9 +1,9 @@
-DROP TABLE `TASK`;
+DROP TABLE IF EXISTS  `TASK`;
 
 CREATE TABLE `TASK`
 (
-    `TASK_CODE`         CHAR(78)            NOT NULL    COMMENT '"TASKLIST_CODE"+"_"+"YmdHisu"',
-    `TASKLIST_CODE`     CHAR(57)            NOT NULL    COMMENT '所属タスク一覧',
+    `LIST_CODE`         CHAR(54)            NOT NULL    COMMENT '所属タスク一覧',
+    `TASK_CODE`         CHAR(72)            NOT NULL    COMMENT '"LIST_CODE"+"_"+"YmdHisu"',
     `INDEX`             TINYINT UNSIGNED    NOT NULL    COMMENT '表示順',
     `NAME`              VARCHAR(64)         NOT NULL    COMMENT 'タスク名',
     `TEXT`              VARCHAR(1024)       NOT NULL    COMMENT '本文',
@@ -15,11 +15,8 @@ CREATE TABLE `TASK`
     `CREATE_ID`         VARCHAR(16)         NOT NULL    COMMENT '作成ユーザーID',
     `CREATE_DATETIME`   DATETIME            NOT NULL    COMMENT '作成日時',
     `UPDATE_ID`         VARCHAR(16)         NOT NULL    COMMENT '更新ユーザーID',
-    `UPDATE_DATETIME`   DATETIME            NOT NULL    COMMENT '更新日時'
-);
-
-ALTER TABLE `TASK` ADD CONSTRAINT PK_TASK PRIMARY KEY (
-    `TASK_CODE`
+    `UPDATE_DATETIME`   DATETIME            NOT NULL    COMMENT '更新日時',
+    PRIMARY KEY(`LIST_CODE`, `TASK_CODE`)
 );
 
 ALTER TABLE `TASK` COMMENT 'タスクテーブル';

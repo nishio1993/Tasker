@@ -1,7 +1,5 @@
 <?php
-require_once('class/Logger.class.php');
-require_once('class/DBFacade.class.php');
-
+require_once('autoloader.php');
 
 $PATH_INFO = (string)filter_input(INPUT_SERVER, 'PATH_INFO');
 if (empty($PATH_INFO)) {

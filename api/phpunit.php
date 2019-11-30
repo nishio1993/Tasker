@@ -1,6 +1,6 @@
 <?php
 
-$unittestList = glob('unittest/*.php');
+$unittestList = glob('test/class/*.php');
 foreach($unittestList as $unittest) {
     $cmd = 'vendor/bin/phpunit '.$unittest;
     $file = new SplFileObject('phpunit.cmd', 'w');

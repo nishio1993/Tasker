@@ -1,4 +1,4 @@
-DROP TABLE `USER`;
+DROP TABLE IF EXISTS `USER`;
 
 CREATE TABLE `USER`
 (
@@ -6,11 +6,8 @@ CREATE TABLE `USER`
     `NAME`              VARCHAR(32)     NOT NULL    COMMENT 'ユーザー名',
     `PASSWORD`          VARCHAR(256)    NOT NULL    COMMENT 'パスワード',
     `CREATE_DATETIME`   DATETIME                    COMMENT '作成日時',
-    `UPDATE_DATETIME`   DATETIME                    COMMENT '更新日時'
-);
-
-ALTER TABLE `USER` ADD CONSTRAINT PK_USER PRIMARY KEY (
-    `MAIL`
+    `UPDATE_DATETIME`   DATETIME                    COMMENT '更新日時',
+    PRIMARY KEY (`MAIL`)
 );
 
 ALTER TABLE `USER` COMMENT 'ユーザーテーブル';
