@@ -93,3 +93,4 @@ sw.*
 api/vendor/
 api/ProgramData/
 .zip
+.vscode
