@@ -194,8 +194,22 @@ abstract class Record
      */
     protected function insert(): int
     {
-        $sql = [];
         $tableName = get_called_class();
+        $datetime = new DateTimeImmutable();
+        if (in_array('CREATE_DATETIME', $tableName::FIELD)) {
+            $this->CREATE_DATETIME = $datetime->format('Y-m-d H:i:s');
+        }
+        if (in_array('UPDATE_DATETIME', $tableName::FIELD)) {
+            $this->UPDATE_DATETIME = $datetime->format('Y-m-d H:i:s');
+        }
+        if (in_array('CREATE_USER', $tableName::FIELD)) {
+            $this->CREATE_USER = isset($_SESSION['USER']['MAIL'])? $_SESSION['USER']['MAIL']: 'unknown';
+        }
+        if (in_array('UPDATE_USER', $tableName::FIELD)) {
+            $this->UPDATE_USER = isset($_SESSION['USER']['MAIL'])? $_SESSION['USER']['MAIL']: 'unknown';
+        }
+
+        $sql = [];
         $sql[] = "INSERT INTO {$tableName}";
         $sql[] = "(";
         $col = [];
@@ -230,7 +244,14 @@ abstract class Record
     protected function update(): int
     {
         $tableName = get_called_class();
-        $propertyList = $this->data;
+        $datetime = new DateTimeImmutable();
+        if (in_array('UPDATE_DATETIME', $tableName::FIELD)) {
+            $this->UPDATE_DATETIME = $datetime->format('Y-m-d H:i:s');
+        }
+        if (in_array('UPDATE_USER', $tableName::FIELD)) {
+            $this->UPDATE_USER = isset($_SESSION['USER']['MAIL'])? $_SESSION['USER']['MAIL']: 'unknown';
+        }
+
         $sql = [];
         $sql[] = "UPDATE ".$tableName;
         $sql[] = "SET";

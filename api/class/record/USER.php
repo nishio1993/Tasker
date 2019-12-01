@@ -1,22 +1,30 @@
 <?php
 require_once('autoloader.php');
 
-class USER extends Record {
-    const FIELD = ['MAIL', 'NAME', 'PASSWORD', 'CREATE_DATETIME', 'UPDATE_DATETIME'];
-    const KEY = ['MAIL'];
+class USER extends Record
+{
+    const FIELD = [
+        'MAIL',
+        'NAME',
+        'PASSWORD',
+        'CREATE_DATETIME',
+        'UPDATE_DATETIME'
+    ];
+    const KEY = [
+        'MAIL'
+    ];
 
-    public static function findByMAIL($MAIL) {
+    public static function findByMAIL($MAIL)
+    {
         if (is_string($MAIL) || is_array($MAIL)) {
-            return parent::select([], ['MAIL' => $MAIL], []);
+            return parent::select([], ['MAIL' => $MAIL]);
         } else {
             throw new RuntimeException('Failure USER->findByMAIL()');
         }
     }
 
-    public function regist() : int {
-        $datetime = new DateTimeImmutable();
-        $this->CREATE_DATETIME = $datetime->format('Y-m-d H:i:s');
-        $this->UPDATE_DATETIME = $datetime->format('Y-m-d H:i:s');
+    public function regist(): int
+    {
         $result = parent::insert();
         if ($result === 0) {
             throw new RuntimeException('Failure USER->Regist()');
@@ -24,9 +32,8 @@ class USER extends Record {
         return $result;
     }
 
-    public function save() : int {
-        $datetime = new DateTimeImmutable();
-        $this->UPDATE_DATETIME = $datetime->format('Y-m-d H:i:s');
+    public function save(): int
+    {
         $result = parent::update();
         if ($result === 0) {
             throw new RuntimeException('Failure USER->Save()');
@@ -34,7 +41,8 @@ class USER extends Record {
         return $result;
     }
 
-    public function unregist() : int {
+    public function unregist(): int
+    {
         $result = parent::delete();
         if ($result === 0) {
             throw new RuntimeException('Failure USER->Unregist()');

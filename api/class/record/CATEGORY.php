@@ -1,34 +1,32 @@
 <?php
 require_once('autoloader.php');
 
-class PROJECT extends Record
+class CATEGORY extends Record
 {
     const FIELD = [
         'PROJECT_CODE',
-        'PROJECT_NAME',
+        'COLUMN_CODE',
+        'INDEX',
+        'COLUMN_NAME',
         'CREATE_USER',
         'CREATE_DATETIME',
         'UPDATE_USER',
-        'UPDATE_DATETIME'
-    ];
+        'UPDATE_DATETIME'];
     const KEY = [
-        'PROJECT_CODE'
+        'PROJECT_CODE',
+        'COLUMN_CODE'
     ];
 
-    public static function findByProjectCode($projectCode)
+    public static function findByProjectCode(string $projectCode)
     {
-        if (is_string($projectCode) || is_array($projectCode)) {
-            return parent::select([], ['PROJECT_CODE' => $projectCode]);
-        } else {
-            throw new RuntimeException('Failure PROJECT->findByProjectCode()');
-        }
+        return parent::select([], ['PROJECT_CODE' => $projectCode], []);
     }
 
     public function create(): int
     {
         $result = parent::insert();
         if ($result === 0) {
-            throw new RuntimeException('Failure PROJECT->create()');
+            throw new RuntimeException('Failure CATEGORY->create()');
         }
         return $result;
     }
@@ -37,7 +35,7 @@ class PROJECT extends Record
     {
         $result = parent::update();
         if ($result === 0) {
-            throw new RuntimeException('Failure PROJECT->save()');
+            throw new RuntimeException('Failure CATEGORY->save()');
         }
         return $result;
     }
@@ -46,7 +44,7 @@ class PROJECT extends Record
     {
         $result = parent::delete();
         if ($result === 0) {
-            throw new RuntimeException('Failure PROJECT->delete()');
+            throw new RuntimeException('Failure CATEGORY->delete()');
         }
         return $result;
     }

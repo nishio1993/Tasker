@@ -3,10 +3,10 @@ DROP TABLE IF EXISTS  `PROJECT`;
 CREATE TABLE `PROJECT`
 (
     `PROJECT_CODE`      CHAR(36)        NOT NULL    COMMENT 'GUID',
-    `NAME`              VARCHAR(64)     NOT NULL    COMMENT 'プロジェクト名',
-    `CREATE_ID`         VARCHAR(16)     NOT NULL    COMMENT '作成ユーザーID',
+    `PROJECT_NAME`      VARCHAR(64)     NOT NULL    COMMENT 'プロジェクト名',
+    `CREATE_USER`       VARCHAR(16)     NOT NULL    COMMENT '作成ユーザーID',
     `CREATE_DATETIME`   DATETIME        NOT NULL    COMMENT '作成日時',
-    `UPDATE_ID`         VARCHAR(16)     NOT NULL    COMMENT '更新ユーザーID',
+    `UPDATE_USER`       VARCHAR(16)     NOT NULL    COMMENT '更新ユーザーID',
     `UPDATE_DATETIME`   DATETIME        NOT NULL    COMMENT '更新日時',
     PRIMARY KEY (`PROJECT_CODE`)
 );
