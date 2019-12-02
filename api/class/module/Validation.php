@@ -192,6 +192,22 @@ class Validation {
     }
 
     /**
+     * 数値範囲チェック関数
+     * 
+     * $strのが$min以上かつ$max以下の場合trueを返却
+     * $min未満または$max超の場合falseを返却
+     * 
+     * @param   string  $str
+     * @param   integer $min
+     * @param   integer $max
+     * @return  boolean
+     */
+    public static function isCorrectRange($str, int $min, int $max): bool
+    {
+        return $min <= $max && $min <= (int)$str && (int)$str <= $max;
+    }
+
+    /**
      * 16進数チェック関数
      * 
      * $strが16進数の場合trueを返却
@@ -202,5 +218,19 @@ class Validation {
      */
     public static function isHexadecimal(string $str) : bool {
         return preg_match("/^[a-fA-F0-9]+$/", mb_convert_kana($str, 'a'));
+    }
+
+    /**
+     * TINYINTチェック関数
+     * 
+     * $strが0以上255以下の場合trueを返却
+     * そうではない場合Falseを返却
+     *
+     * @param string $value
+     * @return boolean
+     */
+    public static function isTinyInt(string $value): bool
+    {
+        return 0 <= $value && $value <= 255;
     }
 }

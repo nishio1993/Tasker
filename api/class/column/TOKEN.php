@@ -1,11 +1,11 @@
 <?php
 require_once('autoloader.php');
 
-class TOKEN implements ColumnBase {
+class TOKEN implements Column {
     public static function isValid($value) : bool {
-        return  Validation::isSingleByte($value) &&
+        return !Validation::includingPlatformDependentCharacters($value) &&
                 Validation::isCorrectLength($value, 32, 32) &&
-               !Validation::includingPlatformDependentCharacters($value) &&
+                Validation::isSingleByte($value) &&
                 Validation::isHexadecimal($value)
                 ? true
                 : false;

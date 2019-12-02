@@ -1,7 +1,7 @@
 <?php
-//require_once('autoloader.php');
+require_once('autoloader.php');
 
-class START_DATETIME implements ColumnBase
+class START_DATETIME implements Column
 {
     public static function isValid($value): bool
     {

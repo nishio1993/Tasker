@@ -17,7 +17,7 @@ abstract class Record
      * コンストラクタ
      * 
      * 継承クラスのプロパティを引数から設定する。
-     * 引数はColumnBase継承クラス配列もしくはKeyValue形式であること。
+     * 引数はColumn継承クラス配列もしくはKeyValue形式であること。
      *
      * @param array $columnList
      */

@@ -1,7 +1,7 @@
 <?php
 require_once('autoloader.php');
 
-class PROJECT_NAME implements Column
+class CATEGORY_NAME implements Column
 {
     public static function isValid($value): bool
     {

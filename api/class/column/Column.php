@@ -1,4 +1,4 @@
 <?php
-interface ColumnBase {
+interface Column {
     public static function isValid($value) : bool;
 }

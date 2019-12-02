@@ -1,12 +1,13 @@
 <?php
 require_once('autoloader.php');
 
-class CREATE_DATETIME implements Column
+class PROGRESS implements Column
 {
     public static function isValid($value): bool
     {
         return  Validation::isSingleByte($value) &&
-                Validation::isDateTime($value)
+                Validation::isNumber($value) &&
+                Validation::isCorrectRange($value, 0, 100)
                 ? true
                 : false;
     }
