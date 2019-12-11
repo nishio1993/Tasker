@@ -43,7 +43,7 @@ class Security {
      */
     public static function ToHash(string $password) : string {
         $password = str_replace("\0", "", $password);
-        return password_hash($password, PASSWORD_ARGON2I);
+        return password_hash($password, PASSWORD_ARGON2ID);
     }
 
     /**

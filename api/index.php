@@ -7,9 +7,9 @@ if (empty($PATH_INFO)) {
     return;
 }
 
-if (file_exists('controller'.$PATH_INFO.'.api.php')) {
+if (file_exists('controller'.$PATH_INFO.'.php')) {
     try {
-        require_once('controller'.$PATH_INFO.'.api.php');
+        require_once('controller'.$PATH_INFO.'.php');
         $method = (string)filter_input(INPUT_SERVER, 'REQUEST_METHOD');
         $response = [];
         Logger::INFO('PATH_INFO is '.$PATH_INFO.', method is '.$method);
@@ -19,11 +19,7 @@ if (file_exists('controller'.$PATH_INFO.'.api.php')) {
             $response = $method();
             DBFacade::Commit();
             DBFacade::DisConnect();
-            if (isset($response['error'])) {
-                response(400, $response);
-            } else {
-                response(200, $response);
-            }
+            response(200, $response);
         } else {
             $error = 'Method is invalid';
             Logger::ERROR('method is invalid');

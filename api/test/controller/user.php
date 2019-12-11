@@ -16,11 +16,11 @@ class usertest extends TestCase {
     /**
      * @test
      */
-    public function MAILとNAMEとPASSWORDが揃えば登録可能() {
+    public function MAILとUSER_NAMEとPASSWORDが揃えば登録可能() {
         $res = $this->client->post($this->uri, [
             'form_params' => [
                 'MAIL'     => urlencode('test@test.com'),
-                'NAME'     => urlencode('テスト太郎'),
+                'USER_NAME'     => urlencode('テスト太郎'),
                 'PASSWORD' => urlencode('password')
             ],
         ]);
@@ -37,7 +37,7 @@ class usertest extends TestCase {
         $res = $this->client->post($this->uri, [
             'form_params' => [
                 'MAIL'     => urlencode('sample@sample.com'),
-                'NAME'     => urlencode('テスト太郎'),
+                'USER_NAME'     => urlencode('テスト太郎'),
                 'PASSWORD' => urlencode('password')
             ],
         ]);
@@ -55,7 +55,7 @@ class usertest extends TestCase {
         $res = $this->client->post($this->uri, [
             'form_params' => [
                 'MAIL'     => urlencode('test@test.com'),
-                'NAME'     => urlencode('テスト太郎'),
+                'USER_NAME'     => urlencode('テスト太郎'),
                 'PASSWORD' => urlencode('password')
             ]
         ]);
@@ -72,7 +72,7 @@ class usertest extends TestCase {
         $this->expectException(GuzzleHttp\Exception\ClientException::class);
         $res = $this->client->post($this->uri, [
             'form_params' => [
-                'NAME'     => urlencode('テスト太郎'),
+                'USER_NAME'     => urlencode('テスト太郎'),
                 'PASSWORD' => urlencode('password')
             ],
         ],[
@@ -92,7 +92,7 @@ class usertest extends TestCase {
         $res = $this->client->post($this->uri, [
             'form_params' => [
                 'MAIL'     => urlencode(''),
-                'NAME'     => urlencode('テスト太郎'),
+                'USER_NAME'     => urlencode('テスト太郎'),
                 'PASSWORD' => urlencode('password')
             ],
         ],[
@@ -107,7 +107,7 @@ class usertest extends TestCase {
     /**
      * @test
      */
-    public function NAMEかPASSWORDが空欄だと登録不可能() {
+    public function USER_NAMEかPASSWORDが空欄だと登録不可能() {
         $this->expectException(GuzzleHttp\Exception\ClientException::class);
         $res = $this->client->post($this->uri, [
             'form_params' => [
@@ -134,7 +134,7 @@ class usertest extends TestCase {
 
         $response = json_decode($res->getBody());
         $this->assertSame($response->USER->MAIL, 'test@test.com');
-        $this->assertSame($response->USER->NAME, 'テスト太郎');
+        $this->assertSame($response->USER->USER_NAME, 'テスト太郎');
         $this->assertFalse(isset($response->USER->PASSWORD));
         $this->assertTrue(isset($response->USER->CREATE_DATETIME));
         $this->assertTrue(isset($response->USER->UPDATE_DATETIME));
@@ -156,12 +156,12 @@ class usertest extends TestCase {
 
         $response = json_decode($res->getBody());
         $this->assertSame($response->USER[0]->MAIL, 'sample@sample.com');
-        $this->assertSame($response->USER[0]->NAME, 'テスト太郎');
+        $this->assertSame($response->USER[0]->USER_NAME, 'テスト太郎');
         $this->assertFalse(isset($response->USER[0]->PASSWORD));
         $this->assertTrue(isset($response->USER[0]->CREATE_DATETIME));
         $this->assertTrue(isset($response->USER[0]->UPDATE_DATETIME));
         $this->assertSame($response->USER[1]->MAIL, 'test@test.com');
-        $this->assertSame($response->USER[1]->NAME, 'テスト太郎');
+        $this->assertSame($response->USER[1]->USER_NAME, 'テスト太郎');
         $this->assertFalse(isset($response->USER[1]->PASSWORD));
         $this->assertTrue(isset($response->USER[1]->CREATE_DATETIME));
         $this->assertTrue(isset($response->USER[1]->UPDATE_DATETIME));
@@ -189,13 +189,13 @@ class usertest extends TestCase {
     /**
      * @test
      */
-    public function QueryにMAIL、BodyにNAMEで更新可能() {
+    public function QueryにMAIL、BodyにUSER_NAMEで更新可能() {
         $res = $this->client->put($this->uri, [
             'query' => [
                 'MAIL'     => 'test@test.com'
             ],
             'form_params' => [
-                'NAME' => '太郎テスト'
+                'USER_NAME' => '太郎テスト'
             ]
         ],[
             'http_errors' => false
@@ -233,7 +233,7 @@ class usertest extends TestCase {
         $this->expectException(GuzzleHttp\Exception\ClientException::class);
         $res = $this->client->put($this->uri, [
             'form_params' => [
-                'NAME'     => urlencode('太郎テスト'),
+                'USER_NAME'     => urlencode('太郎テスト'),
                 'PASSWORD' => urlencode('password')
             ],
         ],[
@@ -249,7 +249,7 @@ class usertest extends TestCase {
     /**
      * @test
      */
-    public function BodyにNAMEかPASSWORDが無ければ更新不可能() {
+    public function BodyにUSER_NAMEかPASSWORDが無ければ更新不可能() {
         $this->expectException(GuzzleHttp\Exception\ClientException::class);
         $res = $this->client->put($this->uri, [
             'query' => [
@@ -260,7 +260,7 @@ class usertest extends TestCase {
         ]);
 
         $response = json_decode($res->getBody());
-        $this->assertSame($response->error->reason[0], 'NAME');
+        $this->assertSame($response->error->reason[0], 'USER_NAME');
         $this->assertSame($response->error->reason[1], 'PASSWORD');
         $this->assertTrue(isset($response->error->message));
         $this->assertFalse(isset($response->result));

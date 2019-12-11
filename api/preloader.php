@@ -1,0 +1,9 @@
+<?php
+opcache_compile_file('autoloader.php');
+opcache_compile_file('index.php');
+opcache_compile_file('class/module/DBFacade.php');
+opcache_compile_file('class/module/Logger.php');
+opcache_compile_file('class/module/Validation.php');
+opcache_compile_file('class/module/Security.php');
+opcache_compile_file('class/column/ColumnBase.php');
+opcache_compile_file('class/record/Record.php');

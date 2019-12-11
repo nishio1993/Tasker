@@ -235,13 +235,15 @@ abstract class Record
     /**
      * Update
      * 
-     * プロパティの値で、PrimaryKeyを条件に継承クラスのテーブルを更新する。
+     * プロパティの値で、継承クラスのテーブルを更新する。
+     * $whereが空配列の場合PrimaryKeyを条件に更新。
+     * $whereはKeyValue想定。
      * 返り値は影響件数。
      *
-     * @param array $where  列名配列
+     * @param array $where  KeyValue
      * @return int
      */
-    protected function update(): int
+    protected function update($where = []): int
     {
         $tableName = get_called_class();
         $datetime = new DateTimeImmutable();
@@ -266,9 +268,13 @@ abstract class Record
         $sql[] = join(",", $tmp);
         $sql[] = "WHERE";
         $tmp = [];
-        foreach($tableName::KEY as $primaryKey) {
-            $tmp[] = $primaryKey." = :".$primaryKey;
-            $propertyList[$primaryKey] = $this->data[$primaryKey];
+        if ($where === []) {
+            foreach($tableName::KEY as $primaryKey) {
+                $tmp[] = $primaryKey." = :".$primaryKey;
+                $propertyList[$primaryKey] = $this->data[$primaryKey];
+            }
+        } else {
+
         }
         $sql[] = join("\nAND ", $tmp);
         $placeHolder = DBFacade::CreatePlaceHolder($propertyList);

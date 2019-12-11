@@ -4,8 +4,8 @@ require_once('autoloader.php');
 class COMMENT extends Record
 {
     const FIELD = [
-        'TASK_CODE',
-        'INDEX',
+        'PROJECT_CODE',
+        'COMMENT_CODE',
         'COMMENT_TEXT',
         'CREATE_USER',
         'CREATE_DATETIME',
@@ -13,8 +13,8 @@ class COMMENT extends Record
         'UPDATE_DATETIME'
     ];
     const KEY = [
-        'TASK_CODE',
-        'INDEX'
+        'PROJECT_CODE',
+        'COMMENT_CODE'
     ];
 
     public static function findByTaskCode($TASK_CODE)

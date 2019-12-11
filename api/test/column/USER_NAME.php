@@ -3,14 +3,14 @@ use PHPUnit\Framework\TestCase;
 require_once('vendor/autoload.php');
 require_once('autoloader.php');
 
-class NAMEtest extends TestCase {
+class USER_NAMEtest extends TestCase {
     /**
      * 日本語OK
      *
      * @test
      */
     public function JapaneseOK() {
-        $this->assertTrue(NAME::isValid('テスト　太郎'));
+        $this->assertTrue(USER_NAME::isValid('テスト　太郎'));
     }
 
     /**
@@ -19,7 +19,7 @@ class NAMEtest extends TestCase {
      * @test
      */
     public function EnglishOK() {
-        $this->assertTrue(NAME::isValid('Tarou Test'));
+        $this->assertTrue(USER_NAME::isValid('Tarou Test'));
     }
 
     /**
@@ -28,7 +28,7 @@ class NAMEtest extends TestCase {
      * @test
      */
     public function EmptyNG() {
-        $this->assertFalse(NAME::isValid(''));
+        $this->assertFalse(USER_NAME::isValid(''));
     }
 
     /**
@@ -37,34 +37,34 @@ class NAMEtest extends TestCase {
      * @test
      */
     public function NullNG() {
-        $this->assertFalse(NAME::isValid(null));
+        $this->assertFalse(USER_NAME::isValid(null));
     }
 
     /**
      * @test
      */
     public function Half32OK() {
-        $this->assertTrue(NAME::isValid('12345678901234567890123456789012'));
+        $this->assertTrue(USER_NAME::isValid('12345678901234567890123456789012'));
     }
 
     /**
      * @test
      */
     public function Full32OK() {
-        $this->assertTrue(NAME::isValid('１２３４５６７８９０１２３４５６７８９０１２３４５６７８９０１２'));
+        $this->assertTrue(USER_NAME::isValid('１２３４５６７８９０１２３４５６７８９０１２３４５６７８９０１２'));
     }
 
     /**
      * @test
      */
     public function Half33NG() {
-        $this->assertFalse(NAME::isValid('123456789012345678901234567890123'));
+        $this->assertFalse(USER_NAME::isValid('123456789012345678901234567890123'));
     }
 
     /**
      * @test
      */
     public function Full33NG() {
-        $this->assertFalse(NAME::isValid('１２３４５６７８９０１２３４５６７８９０１２３４５６７８９０１２３'));
+        $this->assertFalse(USER_NAME::isValid('１２３４５６７８９０１２３４５６７８９０１２３４５６７８９０１２３'));
     }
 }

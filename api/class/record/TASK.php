@@ -4,9 +4,9 @@ require_once('autoloader.php');
 class TASK extends Record
 {
     const FIELD = [
+        'PROJECT_CODE',
         'TASK_CODE',
         'TASK_NAME',
-        'CATEGORY_CODE',
         'TEXT',
         'REPRESENTATIVE',
         'LABEL',
@@ -19,6 +19,7 @@ class TASK extends Record
         'UPDATE_DATETIME'
     ];
     const KEY = [
+        'PROJECT_CODE',
         'TASK_CODE'
     ];
 

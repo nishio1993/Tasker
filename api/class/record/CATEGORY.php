@@ -5,16 +5,15 @@ class CATEGORY extends Record
 {
     const FIELD = [
         'PROJECT_CODE',
-        'COLUMN_CODE',
-        'INDEX',
-        'COLUMN_NAME',
+        'CATEGORY_CODE',
+        'CATEGORY_NAME',
         'CREATE_USER',
         'CREATE_DATETIME',
         'UPDATE_USER',
         'UPDATE_DATETIME'];
     const KEY = [
         'PROJECT_CODE',
-        'COLUMN_CODE'
+        'CATEGORY_CODE'
     ];
 
     public static function findByProjectCode(string $projectCode)

@@ -5,7 +5,7 @@ class USER extends Record
 {
     const FIELD = [
         'MAIL',
-        'NAME',
+        'USER_NAME',
         'PASSWORD',
         'CREATE_DATETIME',
         'UPDATE_DATETIME'
