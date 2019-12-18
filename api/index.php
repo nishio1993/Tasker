@@ -3,8 +3,9 @@ require_once('autoloader.php');
 
 $PATH_INFO = (string)filter_input(INPUT_SERVER, 'PATH_INFO');
 if (empty($PATH_INFO)) {
-    Logger::ERROR('PathInfo is null');
-    return;
+    $error = 'PATH_INFO is empty.';
+    Logger::ERROR($error);
+    response(404, compact('error'));
 }
 
 if (file_exists('controller'.$PATH_INFO.'.php')) {
@@ -33,8 +34,8 @@ if (file_exists('controller'.$PATH_INFO.'.php')) {
         response(400, compact('error'));
     }
 } else {
-    $error = '無効なURLです。';
-    Logger::ERROR('PATH_INFO is invalid');
+    $error = 'PATH_INFO is invalid';
+    Logger::ERROR($error);
     response(404, compact('error'));
 }
 
